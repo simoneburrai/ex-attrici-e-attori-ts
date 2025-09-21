@@ -7,4 +7,18 @@ export type Person = {
     image: string
 }
 
+export type Actress = Person & {
+    most_famous_movies: [string, string, string],
+    award: string,
+    nationality: Nationality
+}
+
+type Nationality = "American" | "British" | 
+    "Australian" | "Israeli-American" | 
+    "South African" | "French" | "Indian" | 
+    "Israeli" | "Spanish" | "South Korean" |
+    "Chinese"
+
+
+
 
