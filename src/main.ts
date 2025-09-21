@@ -31,7 +31,7 @@ async function getAllActress(): Promise<Actress[] | null>{
                 throw new Error("Errore nella chiamata HTTP")
             }
             const data : unknown = await response.json();
-            if(!Array.isArray(data) || !isActress(data[0])){
+            if(!Array.isArray(data)){
                 throw new Error("Errore nella struttura del dato")
             }else{
                 return data;
@@ -63,7 +63,7 @@ function isActress(data: unknown) : data is Actress{
         "name" in data &&
         typeof data.name === "string" &&
         "birth_year" in data &&
-        typeof data.id === "number" &&
+        typeof data.birth_year === "number" &&
         "awards" in data &&
         typeof data.awards === "string"
     ){
@@ -79,7 +79,7 @@ async function getActresses(actressesIds : number[]): Promise<Actress[] | null>{
      try {
          const promises = actressesIds.map(id => getActress(id));
         const data: unknown = await Promise.all(promises);
-            if(!Array.isArray(data) || !isActress(data[0])){
+            if(!Array.isArray(data) || data[0] === null){
                 throw new Error("Errore nella struttura del dato")
             }else{
                 return  data;
@@ -94,6 +94,8 @@ async function getActresses(actressesIds : number[]): Promise<Actress[] | null>{
     }
 }
 
-console.log(getActress(4));
-console.log(getAllActress());
-console.log(getActresses([1, 2, 3, 4]))
+getActress(4).then(data => console.log(data));
+
+getAllActress().then(data => console.log(data));
+
+getActresses([1, 2, 4, 5]).then(data => console.log(data));
