@@ -24,6 +24,37 @@ async function getActress(id: number): Promise<Actress | null>{
     }
 }
 
+async function getAllActress(): Promise<Actress[] | null>{
+    try {
+            const response = await fetch(actressApiUrl);
+            if(!response.ok){
+                throw new Error("Errore nella chiamata HTTP")
+            }
+            const data : unknown = await response.json();
+            if(!Array.isArray(data) || !isActress(data[0])){
+                throw new Error("Errore nella struttura del dato")
+            }else{
+                return data;
+            }
+        
+    } catch (error) {
+        if(error instanceof Error){
+            console.error(error.message)
+        }
+        console.error(error)
+        return null
+    }
+}
+
+
+
+
+
+
+
+
+
+
 function isActress(data: unknown) : data is Actress{
     if(data &&
         typeof data === "object" &&
@@ -43,4 +74,26 @@ function isActress(data: unknown) : data is Actress{
     
 }
 
+
+async function getActresses(actressesIds : number[]): Promise<Actress[] | null>{
+     try {
+         const promises = actressesIds.map(id => getActress(id));
+        const data: unknown = await Promise.all(promises);
+            if(!Array.isArray(data) || !isActress(data[0])){
+                throw new Error("Errore nella struttura del dato")
+            }else{
+                return  data;
+            }
+        
+    } catch (error) {
+        if(error instanceof Error){
+            console.error(error.message)
+        }
+        console.error(error)
+        return null
+    }
+}
+
 console.log(getActress(4));
+console.log(getAllActress());
+console.log(getActresses([1, 2, 3, 4]))
